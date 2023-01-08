@@ -5,10 +5,19 @@ const morgan = require('morgan');
 const cors = require('cors');
 // const bodyparser = require('body-parser');
 const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const storage = multer.diskStorage({
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  },
+  destination: function (req, file, cb) {
+    cb(null, './controller/p5/uploads')
+  },
+})
+const upload = multer({ storage })
 
 const app = express();
-// middleware to
+
+
 app.use(cors());
 app.use(morgan('dev'));
 // app.use(express.json());
@@ -16,13 +25,11 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '../client/public')));
 
 
+
 //const dontUseMe = () => throw new Error('implement controllers');
 
 app.post('/upload', upload.single('mp3'), (req, res) => {
-  //
-  //console.log('logging req', req)
-  console.log('logging req.body', req.body)
-  console.log('testing .file', req.file)
+  console.log('here is file:', req.file)
   res.send('successful send!')
 })
 

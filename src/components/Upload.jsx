@@ -1,29 +1,21 @@
 import React from 'react'
-import useState from 'react'
 import axios from 'axios'
 /*
 Plan:
 */
 
-const Upload = () => {
+const Upload = ({loadDisplay}) => {
   //let [audioFile, setAudioFile] = useState('')
 
   let handleUpload = (event) => {
     console.log('file to be appended', event.target.files[0], 'testing typeof', typeof event.target.files[0])
     //setAudioFile(event.target.value)
     var formData = new FormData();
-    formData.append("mp3", event.target.files[0], "mp3");
-    console.log('logging formData class', formData)
-    axios({
-      method: 'post',
-      url: 'http://localhost:3030/upload',
-      data: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+    formData.append("mp3", event.target.files[0], event.target.files[0].name);
+    axios.post('http://localhost:3030/upload', formData, {headers: {'Content-Type': 'multipart/form-data'}})
     .then((res) => {
       console.log('response from server on upload post', res)
+      loadDisplay(event.target.files[0].name)
     })
     .catch((err) => {
       console.log('error on upload, here is err: ', err)
